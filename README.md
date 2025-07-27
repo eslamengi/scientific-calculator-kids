@@ -51,7 +51,7 @@ A colorful, interactive scientific calculator designed specifically for children
 1. Fork this repository
 2. Go to Settings → Pages
 3. Select "Deploy from a branch" → "main"
-4. Your calculator will be available at `https://your-username.github.io/scientific-calculator-kids/`
+4. Your calculator will be available at `https://eslamengi.github.io/scientific-calculator-kids/`
 
 ### Option 3: Local Development
 ```bash
