@@ -1,0 +1,49 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Package manager files
+package-lock.json
+yarn.lock
+
+# Compiled files
+*.pyc
+*.class
+
+# Temporary files
+*~
+.#*
+
+# Screenshots (if not part of the project documentation)
+screenshots/
+
+# Other generated files
+*.zip
+*.tar.gz
+*.rar
+
+# Environment variables
+.env
+.env.local
+
+# Any other files that should not be committed
+scientific_calculator.html.bak
+
+

@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator for Kids</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: scrollText 15s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes scrollText {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-section h2 {
+            color: #d63384;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: bold;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+
+        /* Calculator Container */
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .calculator {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Display */
+        #display {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            text-align: right;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .button.equals {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            height: 60px; /* Same height as other buttons */
+        }
+
+        /* Button Styles */
+        .button-row, .scientific-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .scientific-row {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .button {
+            height: 60px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Button Color Schemes */
+        .button.number {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .button.operator {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #333;
+        }
+
+        .button.scientific {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .button.clear {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .button.equals {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            color: #333;
+            grid-row: span 2;
+            height: 130px;
+        }
+
+        .button.zero {
+            grid-column: span 2;
+        }
+
+        /* Explanation Panel */
+        .explanation-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .explanation-panel h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .explanation-panel {
+            background: rgba(255,255,255,0.98);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            border-left: 4px solid #4ecdc4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .explanation-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .explanation-panel p {
+            color: #495057;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .features-section h2 {
+            color: #495057;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.98);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .feature-card p {
+            color: #495057;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Learning Section */
+        .learning-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .learning-section h2 {
+            color: #495057;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .learning-tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: rgba(255,255,255,0.98);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .tip-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .tip-card p {
+            color: #495057;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .language-toggle {
+                position: static;
+                margin-top: 15px;
+            }
+
+            .button {
+                height: 50px;
+                font-size: 1rem;
+            }
+
+            #display {
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .hero-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .learning-tips {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 10px;
+            }
+
+            .calculator {
+                padding: 15px;
+            }
+
+            .button {
+                height: 45px;
+                font-size: 0.9rem;
+            }
+
+            .button.scientific {
+                font-size: 0.8rem;
+            }
+
+            #display {
+                height: 50px;
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+
+            .hero-section {
+                padding: 20px 15px;
+            }
+
+            .features-section, .learning-section {
+                padding: 20px 15px;
+            }
+        }
+
+        /* Animation for button press */
+        @keyframes buttonPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .button.pressed {
+            animation: buttonPress 0.1s ease;
+        }
+
+        /* Accessibility */
+        .button:focus {
+            outline: 3px solid #ff6b6b;
+            outline-offset: 2px;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            }
+            
+            .hero-section, .features-section, .learning-section {
+                background: rgba(255,255,255,0.15);
+                color: white;
+                backdrop-filter: blur(15px);
+            }
+            
+            .hero-section h2, .features-section h2, .learning-section h2 {
+                color: #fff;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            }
+            
+            .hero-section p {
+                color: #e9ecef;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            }
+            
+            .feature-card, .tip-card {
+                background: rgba(255,255,255,0.1);
+                color: white;
+                border: 1px solid rgba(255,255,255,0.2);
+            }
+            
+            .feature-card h3, .tip-card h4 {
+                color: #fff;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            }
+            
+            .feature-card p, .tip-card p {
+                color: #e9ecef;
+            }
+            
+            .calculator, .explanation-panel {
+                background: rgba(255,255,255,0.1);
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Scientific Calculator</h1>
+        <button class="language-toggle" onclick="toggleLanguage()">ENG/عربى</button>
+    </header>
+
+    <main>
+        <div class="hero-section">
+            <h2>Learn Math with Fun!</h2>
+            <p>Discover the amazing world of mathematics with our colorful scientific calculator designed just for you!</p>
+        </div>
+
+        <div class="calculator-container">
+            <div class="calculator">
+                <div id="display">0</div>
+                
+                <!-- Scientific function buttons -->
+                <div class="scientific-row">
+                    <button class="button scientific" onclick="appendToDisplay('sin(')">sin</button>
+                    <button class="button scientific" onclick="appendToDisplay('cos(')">cos</button>
+                    <button class="button scientific" onclick="appendToDisplay('tan(')">tan</button>
+                    <button class="button scientific" onclick="appendToDisplay('log(')">log</button>
+                    <button class="button scientific" onclick="appendToDisplay('√(')">√</button>
+                </div>
+
+                <div class="scientific-row">
+                    <button class="button scientific" onclick="appendToDisplay('('))">(</button>
+                    <button class="button scientific" onclick="appendToDisplay(')')">)</button>
+                    <button class="button scientific" onclick="appendToDisplay('^')">x^y</button>
+                    <button class="button scientific" onclick="appendToDisplay('**2')">x²</button>
+                    <button class="button scientific" onclick="appendToDisplay('**3')">x³</button>
+                </div>
+
+                <!-- Main calculator buttons -->
+                <div class="button-row">
+                    <button class="button clear" onclick="clearDisplay()">C</button>
+                    <button class="button clear" onclick="deleteLast()">⌫</button>
+                    <button class="button operator" onclick="appendToDisplay('/')">/</button>
+                    <button class="button operator" onclick="appendToDisplay('*')">×</button>
+                </div>
+
+                <div class="button-row">
+                    <button class="button number" onclick="appendToDisplay('7')">7</button>
+                    <button class="button number" onclick="appendToDisplay('8')">8</button>
+                    <button class="button number" onclick="appendToDisplay('9')">9</button>
+                    <button class="button operator" onclick="appendToDisplay('-')">-</button>
+                </div>
+
+                <div class="button-row">
+                    <button class="button number" onclick="appendToDisplay('4')">4</button>
+                    <button class="button number" onclick="appendToDisplay('5')">5</button>
+                    <button class="button number" onclick="appendToDisplay('6')">6</button>
+                    <button class="button operator" onclick="appendToDisplay('+')">+</button>
+                </div>
+
+                <div class="button-row">
+                    <button class="button" onclick="appendToDisplay('1')">1</button>
+                    <button class="button" onclick="appendToDisplay('2')">2</button>
+                    <button class="button" onclick="appendToDisplay('3')">3</button>
+                    <button class="button equals" onclick="calculateResult()">=</button>
+                </div>
+
+                <div class="button-row">
+                    <button class="button" onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
+                    <button class="button" onclick="appendToDisplay('.')">.</button>
+                    <button class="button" onclick="appendToDisplay('π')">π</button>
+                </div>
+            </div>
+
+            <div class="explanation-panel">
+                <h3>What are you calculating?</h3>
+                <div id="explanation">
+                    <p style="color: #666; font-style: italic;">Start calculating to see explanations here!</p>
+                </div>
+            </div>
+        </div>
+
+    <div class="features-section">
+            <h2>Amazing Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔢</div>
+                    <h3>Basic Operations</h3>
+                    <p>Add, subtract, multiply, and divide with colorful buttons!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📐</div>
+                    <h3>Scientific Functions</h3>
+                    <p>Explore trigonometry, logarithms, and square roots!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Multiple Languages</h3>
+                    <p>Switch between English and Arabic easily!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Works perfectly on phones, tablets, and computers!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2>Learn While You Calculate</h2>
+            <div class="learning-tips">
+                <div class="tip-card">
+                    <h4>Tip 1: Order of Operations</h4>
+                    <p>Remember PEMDAS: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction!</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Tip 2: Scientific Functions</h4>
+                    <p>Sin, Cos, and Tan help us understand triangles and circles in geometry!</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Tip 3: Square Roots</h4>
+                    <p>The square root of a number is a value that, when multiplied by itself, gives the original number!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Scientific Calculator by: Eslam Elsheikh</p>
+    </footer>
+
+    <script>
+        let currentLanguage = 'en';
+        let currentInput = '0';
+        let shouldResetDisplay = false;
+        let lastOperation = '';
+
+        // Scientific explanations for educational purposes
+        const scientificExplanations = {
+            en: {
+                sin: {
+                    title: "Sine Function (sin)",
+                    explanation: "The sine function is a fundamental trigonometric function that relates to right triangles and circles. For an angle θ in a right triangle, sin(θ) = opposite side / hypotenuse. In the unit circle, it represents the y-coordinate of a point.",
+                    usage: "Used in physics for wave motion, engineering for signal processing, and geometry for calculating heights and distances.",
+                    example: "sin(90°) = 1, sin(30°) = 0.5"
+                },
+                cos: {
+                    title: "Cosine Function (cos)",
+                    explanation: "The cosine function is another key trigonometric function. For an angle θ in a right triangle, cos(θ) = adjacent side / hypotenuse. In the unit circle, it represents the x-coordinate of a point.",
+                    usage: "Essential in physics for describing oscillations, in engineering for AC circuits, and in computer graphics for rotations.",
+                    example: "cos(0°) = 1, cos(60°) = 0.5"
+                },
+                tan: {
+                    title: "Tangent Function (tan)",
+                    explanation: "The tangent function is the ratio of sine to cosine. For an angle θ, tan(θ) = sin(θ)/cos(θ) = opposite side / adjacent side in a right triangle.",
+                    usage: "Used in navigation for calculating slopes, in architecture for roof angles, and in surveying for measuring heights.",
+                    example: "tan(45°) = 1, tan(30°) ≈ 0.577"
+                },
+                log: {
+                    title: "Logarithm Function (log)",
+                    explanation: "The logarithm (base 10) is the inverse of exponentiation. log(x) asks 'to what power must 10 be raised to get x?' It helps solve exponential equations and compress large number ranges.",
+                    usage: "Used in science for pH calculations, in engineering for decibel measurements, and in finance for compound interest calculations.",
+                    example: "log(100) = 2 (because 10² = 100), log(1000) = 3"
+                },
+                sqrt: {
+                    title: "Square Root Function (√)",
+                    explanation: "The square root of a number x is a value that, when multiplied by itself, gives x. It's the inverse operation of squaring a number.",
+                    usage: "Used in geometry for calculating distances (Pythagorean theorem), in physics for RMS values, and in statistics for standard deviation.",
+                    example: "√16 = 4, √25 = 5, √2 ≈ 1.414"
+                },
+                power: {
+                    title: "Exponentiation (x^y)",
+                    explanation: "Exponentiation means raising a number (base) to a power (exponent). x^y means multiplying x by itself y times.",
+                    usage: "Used in compound interest calculations, population growth models, and scientific notation for very large or small numbers.",
+                    example: "2³ = 8, 5² = 25, 10⁴ = 10,000"
+                },
+                pi: {
+                    title: "Pi (π)",
+                    explanation: "Pi is a mathematical constant representing the ratio of a circle's circumference to its diameter. It's approximately 3.14159 and is an irrational number that goes on forever without repeating.",
+                    usage: "Essential in geometry for circle calculations, in physics for wave equations, and in engineering for periodic phenomena.",
+                    example: "Circle area = πr², Circumference = 2πr"
+                }
+            },
+            ar: {
+                sin: {
+                    title: "دالة الجيب (sin)",
+                    explanation: "دالة الجيب هي دالة مثلثية أساسية ترتبط بالمثلثات القائمة والدوائر. للزاوية θ في مثلث قائم، sin(θ) = الضلع المقابل / الوتر. في الدائرة الوحدة، تمثل الإحداثي الصادي للنقطة.",
+                    usage: "تُستخدم في الفيزياء لحركة الموجات، وفي الهندسة لمعالجة الإشارات، وفي الهندسة لحساب الارتفاعات والمسافات.",
+                    example: "sin(90°) = 1, sin(30°) = 0.5"
+                },
+                cos: {
+                    title: "دالة جيب التمام (cos)",
+                    explanation: "دالة جيب التمام هي دالة مثلثية أساسية أخرى. للزاوية θ في مثلث قائم، cos(θ) = الضلع المجاور / الوتر. في الدائرة الوحدة، تمثل الإحداثي السيني للنقطة.",
+                    usage: "أساسية في الفيزياء لوصف التذبذبات، وفي الهندسة للدوائر المترددة، وفي رسوميات الحاسوب للدوران.",
+                    example: "cos(0°) = 1, cos(60°) = 0.5"
+                },
+                tan: {
+                    title: "دالة الظل (tan)",
+                    explanation: "دالة الظل هي نسبة الجيب إلى جيب التمام. للزاوية θ، tan(θ) = sin(θ)/cos(θ) = الضلع المقابل / الضلع المجاور في مثلث قائم.",
+                    usage: "تُستخدم في الملاحة لحساب المنحدرات، وفي العمارة لزوايا الأسقف، وفي المساحة لقياس الارتفاعات.",
+                    example: "tan(45°) = 1, tan(30°) ≈ 0.577"
+                },
+                log: {
+                    title: "دالة اللوغاريتم (log)",
+                    explanation: "اللوغاريتم (الأساس 10) هو عكس الأس. log(x) يسأل 'إلى أي قوة يجب رفع 10 للحصول على x؟' يساعد في حل المعادلات الأسية وضغط نطاقات الأرقام الكبيرة.",
+                    usage: "يُستخدم في العلوم لحسابات الأس الهيدروجيني، وفي الهندسة لقياسات الديسيبل، وفي المالية لحسابات الفوائد المركبة.",
+                    example: "log(100) = 2 (لأن 10² = 100), log(1000) = 3"
+                },
+                sqrt: {
+                    title: "دالة الجذر التربيعي (√)",
+                    explanation: "الجذر التربيعي للعدد x هو قيمة عندما تُضرب في نفسها تعطي x. إنها العملية العكسية لتربيع العدد.",
+                    usage: "يُستخدم في الهندسة لحساب المسافات (نظرية فيثاغورس)، وفي الفيزياء للقيم الفعالة، وفي الإحصاء للانحراف المعياري.",
+                    example: "√16 = 4, √25 = 5, √2 ≈ 1.414"
+                },
+                power: {
+                    title: "الأس (x^y)",
+                    explanation: "الأس يعني رفع عدد (الأساس) إلى قوة (الأس). x^y يعني ضرب x في نفسه y مرة.",
+                    usage: "يُستخدم في حسابات الفوائد المركبة، ونماذج نمو السكان، والترميز العلمي للأرقام الكبيرة جداً أو الصغيرة جداً.",
+                    example: "2³ = 8, 5² = 25, 10⁴ = 10,000"
+                },
+                pi: {
+                    title: "باي (π)",
+                    explanation: "باي هو ثابت رياضي يمثل نسبة محيط الدائرة إلى قطرها. يساوي تقريباً 3.14159 وهو عدد غير نسبي يستمر إلى ما لا نهاية دون تكرار.",
+                    usage: "أساسي في الهندسة لحسابات الدائرة، وفي الفيزياء لمعادلات الموجات، وفي الهندسة للظواهر الدورية.",
+                    example: "مساحة الدائرة = πr²، المحيط = 2πr"
+                }
+            }
+        };
+
+        // Language translations
+        const translations = {
+            en: {
+                title: "Scientific Calculator",
+                heroTitle: "Learn Math with Fun!",
+                heroText: "Discover the amazing world of mathematics with our colorful scientific calculator designed just for you!",
+                calculatingText: "What are you calculating?",
+                startText: "Start calculating to see explanations here!",
+                funFactsTitle: "Fun Math Facts! 🌟",
+                featuresTitle: "Amazing Features",
+                learningTitle: "Learn While You Calculate",
+                feature1Title: "Basic Operations",
+                feature1Text: "Add, subtract, multiply, and divide with colorful buttons!",
+                feature2Title: "Scientific Functions",
+                feature2Text: "Explore trigonometry, logarithms, and square roots!",
+                feature3Title: "Multiple Languages",
+                feature3Text: "Switch between English and Arabic easily!",
+                feature4Title: "Mobile Friendly",
+                feature4Text: "Works perfectly on phones, tablets, and computers!",
+                tip1Title: "Tip 1: Order of Operations",
+                tip1Text: "Remember PEMDAS: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction!",
+                tip2Title: "Tip 2: Scientific Functions",
+                tip2Text: "Sin, Cos, and Tan help us understand triangles and circles in geometry!",
+                tip3Title: "Tip 3: Square Roots",
+                tip3Text: "The square root of a number is a value that, when multiplied by itself, gives the original number!",
+                footerText: "© 2024 Scientific Calculator for Kids - Making Math Fun and Easy!"
+            },
+            ar: {
+                title: "حاسبة علمية",
+                heroTitle: "تعلم الرياضيات بمرح!",
+                heroText: "اكتشف عالم الرياضيات المذهل مع حاسبتنا العلمية الملونة المصممة خصيصاً لك!",
+                calculatingText: "ماذا تحسب؟",
+                startText: "ابدأ الحساب لترى التفسيرات هنا!",
+                funFactsTitle: "حقائق رياضية ممتعة! 🌟",
+                featuresTitle: "ميزات رائعة",
+                learningTitle: "تعلم أثناء الحساب",
+                feature1Title: "العمليات الأساسية",
+                feature1Text: "اجمع واطرح واضرب واقسم بأزرار ملونة!",
+                feature2Title: "الدوال العلمية",
+                feature2Text: "استكشف علم المثلثات واللوغاريتمات والجذور التربيعية!",
+                feature3Title: "لغات متعددة",
+                feature3Text: "انتقل بين الإنجليزية والعربية بسهولة!",
+                feature4Title: "متوافق مع الجوال",
+                feature4Text: "يعمل بشكل مثالي على الهواتف والأجهزة اللوحية والحاسوب!",
+                tip1Title: "نصيحة 1: ترتيب العمليات",
+                tip1Text: "تذكر: الأقواس، الأسس، الضرب/القسمة، الجمع/الطرح!",
+                tip2Title: "نصيحة 2: الدوال العلمية",
+                tip2Text: "الجيب وجيب التمام والظل تساعدنا في فهم المثلثات والدوائر في الهندسة!",
+                tip3Title: "نصيحة 3: الجذور التربيعية",
+                tip3Text: "الجذر التربيعي لعدد هو قيمة عندما تُضرب في نفسها تعطي العدد الأصلي!",
+                footerText: "© 2024 حاسبة علمية للأطفال - نجعل الرياضيات ممتعة وسهلة!"
+            }
+        };
+
+        // Initialize the calculator
+        function initCalculator() {
+            updateDisplay();
+            showRandomMathFact();
+            setInterval(showRandomMathFact, 10000); // Show new fact every 10 seconds
+        }
+
+        // Display functions
+        function updateDisplay() {
+            const display = document.getElementById('display');
+            display.textContent = currentInput;
+        }
+
+        function appendToDisplay(value) {
+            // Add button press animation
+            event.target.classList.add('pressed');
+            setTimeout(() => event.target.classList.remove('pressed'), 100);
+
+            if (shouldResetDisplay) {
+                currentInput = '';
+                shouldResetDisplay = false;
+            }
+
+            if (currentInput === '0' && value !== '.') {
+                currentInput = value;
+            } else {
+                currentInput += value;
+            }
+
+            updateDisplay();
+            updateExplanation();
+        }
+
+        function clearDisplay() {
+            // Add button press animation
+            event.target.classList.add('pressed');
+            setTimeout(() => event.target.classList.remove('pressed'), 100);
+
+            currentInput = '0';
+            lastOperation = '';
+            updateDisplay();
+            clearExplanation();
+        }
+
+        function deleteLast() {
+            // Add button press animation
+            event.target.classList.add('pressed');
+            setTimeout(() => event.target.classList.remove('pressed'), 100);
+
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+            updateExplanation();
+        }
+
+        function calculateResult() {
+            // Add button press animation
+            event.target.classList.add('pressed');
+            setTimeout(() => event.target.classList.remove('pressed'), 100);
+
+            try {
+                lastOperation = currentInput;
+                let expression = currentInput;
+
+                // Auto-close open parentheses before calculation
+                const openParens = (expression.match(/\(/g) || []).length;
+                const closeParens = (expression.match(/\)/g) || []).length;
+                const unclosedParens = openParens - closeParens;
+                
+                if (unclosedParens > 0) {
+                    expression += ')'.repeat(unclosedParens);
+                    currentInput = expression; // Update display to show closed parentheses
+                    updateDisplay();
+                }
+
+                // Replace mathematical symbols with JavaScript equivalents
+                expression = expression.replace(/π/g, Math.PI);
+                expression = expression.replace(/sin\(/g, 'Math.sin(');
+                expression = expression.replace(/cos\(/g, 'Math.cos(');
+                expression = expression.replace(/tan\(/g, 'Math.tan(');
+                expression = expression.replace(/log\(/g, 'Math.log10(');
+                expression = expression.replace(/√\(/g, 'Math.sqrt(');
+                expression = expression.replace(/\^/g, '**');
+
+                // Evaluate the expression
+                const result = eval(expression);
+                
+                if (isNaN(result) || !isFinite(result)) {
+                    throw new Error('Invalid calculation');
+                }
+
+                currentInput = result.toString();
+                updateDisplay();
+                updateExplanation(true);
+                shouldResetDisplay = true;
+                
+                // Show encouraging message for correct calculations
+                showEncouragement();
+                
+            } catch (error) {
+                currentInput = 'Error';
+                updateDisplay();
+                setTimeout(() => {
+                    currentInput = '0';
+                    updateDisplay();
+                }, 2000);
+            }
+        }
+
+        // Explanation functions
+        function updateExplanation(isResult = false) {
+            const explanationDiv = document.getElementById('explanation');
+            const lang = currentLanguage;
+            
+            if (isResult && lastOperation) {
+                const resultText = lang === 'en' ? 
+                    `Great! You calculated: ${lastOperation} = ${currentInput}` :
+                    `رائع! لقد حسبت: ${lastOperation} = ${currentInput}`;
+                explanationDiv.innerHTML = `<strong>${resultText}</strong>`;
+                
+                // Add scientific explanation if applicable
+                const scientificExplanation = getScientificExplanation(lastOperation);
+                if (scientificExplanation) {
+                    explanationDiv.innerHTML += `<hr style="margin: 15px 0; border: 1px solid #ddd;">` + scientificExplanation;
+                }
+            } else if (currentInput !== '0' && currentInput !== 'Error') {
+                const calculatingText = translations[lang].calculatingText;
+                let explanationHTML = `${calculatingText}<br><code>${currentInput}</code>`;
+                
+                // Add real-time scientific explanation
+                const scientificExplanation = getScientificExplanation(currentInput);
+                if (scientificExplanation) {
+                    explanationHTML += `<hr style="margin: 15px 0; border: 1px solid #ddd;">` + scientificExplanation;
+                }
+                
+                explanationDiv.innerHTML = explanationHTML;
+            } else {
+                explanationDiv.innerHTML = translations[lang].startText;
+            }
+        }
+
+        function getScientificExplanation(expression) {
+            const lang = currentLanguage;
+            const explanations = scientificExplanations[lang];
+            
+            // Check for different scientific functions
+            if (expression.includes('sin(')) {
+                return formatScientificExplanation(explanations.sin);
+            } else if (expression.includes('cos(')) {
+                return formatScientificExplanation(explanations.cos);
+            } else if (expression.includes('tan(')) {
+                return formatScientificExplanation(explanations.tan);
+            } else if (expression.includes('log(')) {
+                return formatScientificExplanation(explanations.log);
+            } else if (expression.includes('√(')) {
+                return formatScientificExplanation(explanations.sqrt);
+            } else if (expression.includes('^') || expression.includes('**')) {
+                return formatScientificExplanation(explanations.power);
+            } else if (expression.includes('π')) {
+                return formatScientificExplanation(explanations.pi);
+            }
+            
+            return null;
+        }
+
+        function formatScientificExplanation(explanation) {
+            return `
+                <div style="background: rgba(255,255,255,0.98); padding: 15px; border-radius: 10px; margin-top: 10px; border-left: 4px solid #17a2b8; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                    <h4 style="color: #0c5460; margin-bottom: 8px; font-size: 1.1rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">${explanation.title}</h4>
+                    <p style="margin-bottom: 8px; font-size: 0.9rem; line-height: 1.4; color: #2c3e50; font-weight: 500;"><strong>What it is:</strong> ${explanation.explanation}</p>
+                    <p style="margin-bottom: 8px; font-size: 0.9rem; line-height: 1.4; color: #2c3e50; font-weight: 500;"><strong>When to use:</strong> ${explanation.usage}</p>
+                    <p style="margin-bottom: 0; font-size: 0.9rem; line-height: 1.4; color: #2c3e50; font-weight: 500;"><strong>Examples:</strong> ${explanation.example}</p>
+                </div>
+            `;
+        }
+
+        function clearExplanation() {
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.innerHTML = translations[currentLanguage].startText;
+        }
+
+        // Language functions
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+            updateLanguage();
+            updateExplanation();
+            showRandomMathFact();
+        }
+
+        function updateLanguage() {
+            const lang = currentLanguage;
+            const t = translations[lang];
+            
+            // Update text content
+            document.querySelector('header h1').textContent = t.title;
+            document.querySelector('.language-toggle').textContent = lang === 'en' ? 'ENG/عربى' : 'عربى/ENG';
+            document.querySelector('.hero-section h2').textContent = t.heroTitle;
+            document.querySelector('.hero-section p').textContent = t.heroText;
+            document.querySelector('.explanation-panel h3').textContent = t.calculatingText;
+            document.querySelector('.fun-facts h4').textContent = t.funFactsTitle;
+            document.querySelector('.features-section h2').textContent = t.featuresTitle;
+            document.querySelector('.learning-section h2').textContent = t.learningTitle;
+            
+            // Update feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards[0].querySelector('h3').textContent = t.feature1Title;
+            featureCards[0].querySelector('p').textContent = t.feature1Text;
+            featureCards[1].querySelector('h3').textContent = t.feature2Title;
+            featureCards[1].querySelector('p').textContent = t.feature2Text;
+            featureCards[2].querySelector('h3').textContent = t.feature3Title;
+            featureCards[2].querySelector('p').textContent = t.feature3Text;
+            featureCards[3].querySelector('h3').textContent = t.feature4Title;
+            featureCards[3].querySelector('p').textContent = t.feature4Text;
+            
+            // Update tip cards
+            const tipCards = document.querySelectorAll('.tip-card');
+            tipCards[0].querySelector('h4').textContent = t.tip1Title;
+            tipCards[0].querySelector('p').textContent = t.tip1Text;
+            tipCards[1].querySelector('h4').textContent = t.tip2Title;
+            tipCards[1].querySelector('p').textContent = t.tip2Text;
+            tipCards[2].querySelector('h4').textContent = t.tip3Title;
+            tipCards[2].querySelector('p').textContent = t.tip3Text;
+            
+            // Update footer
+            document.querySelector('footer p').textContent = t.footerText;
+            
+            // Update text direction
+            document.body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.setAttribute('lang', lang);
+        }
+
+        // Fun and educational functions
+        function showRandomMathFact() {
+            const facts = mathFacts[currentLanguage];
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            document.getElementById('math-fact').textContent = randomFact;
+        }
+
+        function showEncouragement() {
+            const encouragements = {
+                en: ["Great job! 🎉", "Awesome calculation! ⭐", "You're a math star! 🌟", "Fantastic work! 🎊", "Keep it up! 👏"],
+                ar: ["عمل رائع! 🎉", "حساب مذهل! ⭐", "أنت نجم في الرياضيات! 🌟", "عمل رائع! 🎊", "استمر! 👏"]
+            };
+            
+            const messages = encouragements[currentLanguage];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Create temporary encouragement message
+            const encouragementDiv = document.createElement('div');
+            encouragementDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 15px;
+                font-size: 1.5rem;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                animation: encouragementPop 2s ease-out forwards;
+            `;
+            encouragementDiv.textContent = randomMessage;
+            
+            // Add animation keyframes if not already added
+            if (!document.querySelector('#encouragement-style')) {
+                const style = document.createElement('style');
+                style.id = 'encouragement-style';
+                style.textContent = `
+                    @keyframes encouragementPop {
+                        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                        20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+                        40% { transform: translate(-50%, -50%) scale(1); }
+                        100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(encouragementDiv);
+            
+            // Remove the message after animation
+            setTimeout(() => {
+                if (encouragementDiv.parentNode) {
+                    encouragementDiv.parentNode.removeChild(encouragementDiv);
+                }
+            }, 2000);
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9') {
+                appendToDisplay(key);
+            } else if (key === '.') {
+                appendToDisplay('.');
+            } else if (key === '+') {
+                appendToDisplay('+');
+            } else if (key === '-') {
+                appendToDisplay('-');
+            } else if (key === '*') {
+                appendToDisplay('*');
+            } else if (key === '/') {
+                event.preventDefault(); // Prevent browser search
+                appendToDisplay('/');
+            } else if (key === 'Enter' || key === '=') {
+                event.preventDefault();
+                calculateResult();
+            } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                clearDisplay();
+            } else if (key === 'Backspace') {
+                event.preventDefault();
+                deleteLast();
+            }
+        });
+
+        // Touch support for mobile devices
+        function addTouchSupport() {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.classList.add('pressed');
+                });
+                
+                button.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('pressed');
+                });
+            });
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initCalculator();
+            addTouchSupport();
+            
+            // Add some initial interactivity hints
+            setTimeout(() => {
+                if (currentInput === '0') {
+                    const hint = currentLanguage === 'en' ? 
+                        'Try clicking some numbers to start calculating!' :
+                        'جرب النقر على بعض الأرقام لبدء الحساب!';
+                    document.getElementById('explanation').innerHTML = `<em>${hint}</em>`;
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
+
